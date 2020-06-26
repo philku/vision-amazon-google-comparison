@@ -81,7 +81,6 @@ function image_analysis(image_buffer){
             image: {content: image_buffer},
             features: [
                 {type: 'LABEL_DETECTION'},
-                {type: 'TEXT_DETECTION'},
                 {type: 'LOGO_DETECTION'},
             ],
 
@@ -152,11 +151,97 @@ function image_analysis(image_buffer){
 
 function keyword_report(files){
 
+    // Helper fn
+    function blank_if_none(item){
+        if(item === undefined || item === null){
+            return '';
+        }else{
+            return item.toString();
+        }
+    }
+
+    // Helper fn
+    function listOut(obj){
+        let ret = '';
+
+        let i = 0;
+        Object.keys(obj).forEach(key => {
+            if(i < 4){ret += key.toString() + ' ';}
+            i++;
+        });
+
+        return ret;
+    }
+
+    function reliableBrand(confidence, brand){
+
+        console.log('CONFIDENCE: ', confidence);
+        console.log('brand');
+
+        if (parseFloat(confidence) > 0.75){
+            console.log('returning ', brand);
+            return brand;
+        }else{
+            console.log('returning nothing');
+            return '';
+        }
+    }
+
+    fs.writeFileSync('./out/index.html','<html><head>' +
+        '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">' +
+        '</head><body><div class="container">');
+
     files.forEach(file => {
         let name = file.path.substr(6);
-        console.log(name);
-    })
 
+        console.log('\nImage: ', name);
+        console.log('\nAmazon Results\nLabels:\n', file.keywords.amazon.labels);
+        console.log('\nGoogle Results\nLabels:\n', file.keywords.google.labels);
+        console.log('Brands:\n', file.keywords.google.logos, '\n');
+
+        // File Name
+        fs.appendFileSync('./out/index.html','<br><br><h1 class="text-center">' + name + '</h1><br>');
+
+        // Image
+        fs.appendFileSync('./out/index.html',`<div class="text-center"><img src=".${file.path}" style="height:200px"></div>`);
+
+        // Table of labels
+        fs.appendFileSync('./out/index.html','<table class="table"><tr><th colspan="2">Amazon</th><th colspan="4">Google</th></tr>' +
+            '<tr><th>Label</th><th>%</th><th>Label</th><th>%</th><th>Brand</th><th>%</th></tr>');
+
+        let i = 0;
+        while(i<10){
+            fs.appendFileSync('./out/index.html','<tr><td>' +
+                blank_if_none(Object.keys(file.keywords.amazon.labels)[i]) +
+                '</td><td>' +
+                blank_if_none(file.keywords.amazon.labels[Object.keys(file.keywords.amazon.labels)[i]]).substr(0,6) +
+                '</td><td>' +
+                blank_if_none(Object.keys(file.keywords.google.labels)[i]) +
+                '</td><td>' +
+                blank_if_none(file.keywords.google.labels[Object.keys(file.keywords.google.labels)[i]]).substr(0,6) +
+                '</td><td>' +
+                blank_if_none(Object.keys(file.keywords.google.logos)[i]) +
+                '</td><td>' +
+                blank_if_none(file.keywords.google.logos[Object.keys(file.keywords.google.logos)[i]]).substr(0,6) +
+                '</td></tr>');
+            i++;
+        }
+
+        fs.appendFileSync('./out/index.html','</table>');
+
+        fs.appendFileSync('./out/index.html','<div><b>Search Strings</b><br>' +
+            '<p><b>Amazon: </b>' +
+            listOut(file.keywords.amazon.labels) +
+            '</p>' +
+            '<p><b>Google: </b>' +
+            listOut(file.keywords.google.labels) +
+            reliableBrand(file.keywords.google.logos[Object.keys(file.keywords.google.logos)[0]], Object.keys(file.keywords.google.logos)[0]) +
+            '</p>' +
+            '</div>');
+
+    });
+
+    fs.appendFileSync('./out/index.html','</div></body></html>');
 }
 
 
