@@ -10,3 +10,5 @@ JSON files, then remove "_SAMPLE" from their names.
 3. Run `npm start`. You will receive a report containing the keyword results
 for all images in the 'img' directory. If you wish to try with different 
 images, simply add/remove to/from the 'img' directory.
+
+Results are displayed in the terminal and in the ./out/index.html file
