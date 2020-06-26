@@ -1,8 +1,6 @@
 # Amazon v Google, Image Recognition
 A side-by-side comparison between Amazon and Google vision apis.
 
-Created for SplayIt
-
 ## To Run
 1. Add your credentials for AWS, Google, and PAAPI in the "credentials" 
 JSON files, then remove "_SAMPLE" from their names.
