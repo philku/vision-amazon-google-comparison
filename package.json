@@ -1,0 +1,25 @@
+{
+  "name": "vision-amazon-google-comparison",
+  "version": "0.0.0",
+  "description": "A side-by-side comparison between Amazon and Google vision apis.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philku/vision-amazon-google-comparison.git"
+  },
+  "author": "Philip Kubin",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/philku/vision-amazon-google-comparison/issues"
+  },
+  "homepage": "https://github.com/philku/vision-amazon-google-comparison#readme",
+  "dependencies": {
+    "@google-cloud/vision": "^2.1.0",
+    "aws-sdk": "^2.704.0",
+    "paapi5-nodejs-sdk": "^1.0.1"
+  }
+}
